@@ -52,11 +52,16 @@ https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/logs.
 
 
 def create_export_task(
-    group_name, from_date, to_date, s3_bucket_name, s3_bucket_prefix
+    group_name,
+    from_date,
+    to_date,
+    s3_bucket_name,
+    s3_bucket_prefix,
+    region_name="us-east-1",
 ):
     logging.info("Creating CloudWatch Log Export Task to S3")
     try:
-        client = boto3.client("logs")
+        client = boto3.client("logs", region_name=region_name)
         response = client.create_export_task(
             logGroupName=group_name,
             fromTime=from_date,
@@ -79,9 +84,9 @@ https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/logs.
 """
 
 
-def export_status_call(task_id):
+def export_status_call(task_id, region_name="us-east-1"):
     try:
-        client = boto3.client("logs")
+        client = boto3.client("logs", region_name=region_name)
         response = client.describe_export_tasks(taskId=task_id)
 
         if "exportTasks" not in response:
